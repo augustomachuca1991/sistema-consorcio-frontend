@@ -1,0 +1,19 @@
+{
+    "translation": {
+        "SingIn": "ingresa",
+        "SingInTitleForm": "ingresa a tu cuenta",
+        "SingUp": "registrate",
+        "NoAccount" : "no tenes una cuenta?",
+        "Email" : "correo electronico",
+        "Password" : "contraseña",
+        "ForgotPassword" : "olvido su contraseña?",
+        "Required" : "el campo {{Field}} es requerido",
+        "ErrorEmail" : "por favor ingresa un correo electrónico válido",
+        "ErrorPassword" : "la contraseña debe contener al menos 8 digitos",
+        "InvalidUser" : "usuario incorrecto",
+        "Loading" : "Cargando",
+        "Dashboard" : "Panel de Control"
+
+
+    }
+}
