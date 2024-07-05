@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { lazy, Suspense } from 'react';
 import './index.css'
 import LoadingComponent from "./components/LoadingComponent.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
 
 
 const LoginPage = lazy(() => import('./pages/LoginPage.jsx'));
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="register" element={<RegisterPage />} />
       </Routes>
     </Suspense>
 

@@ -2,6 +2,9 @@
     "translation": {
         "SingIn": "ingresa",
         "SingInTitleForm": "ingresa a tu cuenta",
+        "SingUpTitleForm": "crear tu cuenta",
+        "RePassword": "confirmar contraseña",
+        "Username": "usuario",
         "SingUp": "registrate",
         "NoAccount" : "no tenes una cuenta?",
         "Email" : "correo electronico",
@@ -10,9 +13,11 @@
         "Required" : "el campo {{Field}} es requerido",
         "ErrorEmail" : "por favor ingresa un correo electrónico válido",
         "ErrorPassword" : "la contraseña debe contener al menos 8 digitos",
+        "ErrorRePassword" : "las contraseñas no coinciden",
         "InvalidUser" : "usuario incorrecto",
-        "Loading" : "Cargando",
-        "Dashboard" : "Panel de Control"
+        "Loading" : "cargando",
+        "Dashboard" : "panel de control",
+        "UNIQUE constraint failed: users_user.email" : "el email ya se encuentra registrado."
 
 
     }

@@ -2,18 +2,20 @@
     "translation": {
         "SingIn": "sing in",
         "SingInTitleForm": "sign in to your account",
+        "SingUpTitleForm": "Regsiter ypur count",
+        "RePassword": "confirm password",
+        "Username" : "username",
         "SingUp": "sing up",
         "NoAccount": "don't have an account?",
-        "Email" : "email",
-        "Password" : "password",
-        "ForgotPassword" : "forgot your password?",
-        "Required" : "field {{Field}} required",
-        "ErrorEmail" : "please enter a valid email address",
-        "ErrorPassword" : "the password must contain at least 8 digits",
-        "InvalidUser" : "invalid User",
-        "Loading" : "Loading",
-        "Dashboard" : "Dashboard"
-
-
+        "Email": "email",
+        "Password": "password",
+        "ForgotPassword": "forgot your password?",
+        "Required": "field {{Field}} required",
+        "ErrorEmail": "please enter a valid email address",
+        "ErrorPassword": "the password must contain at least 8 digits",
+        "ErrorRePassword" : "passwords do not match",
+        "InvalidUser": "invalid User",
+        "Loading": "loading",
+        "Dashboard": "dashboard"
     }
 }
