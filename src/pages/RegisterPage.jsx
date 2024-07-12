@@ -4,8 +4,10 @@ import { useNavigate, Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 
+
 const RegisterPages = () => {
   const { t, i18n: { changeLanguage, language } } = useTranslation();
+  const navigate = useNavigate();
   const [msgError, setMsgError] = useState('')
   const { VITE_BASE_URL } = import.meta.env
 
@@ -74,6 +76,7 @@ const RegisterPages = () => {
       })
       .then(json => {
         console.log(json);
+        navigate('/'); // Redirigir a la página de inicio de sesión
       })
       .catch(err => {
         console.error('Error al enviar la solicitud:', err);
