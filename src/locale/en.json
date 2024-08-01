@@ -14,7 +14,7 @@
         "ErrorEmail": "please enter a valid email address",
         "ErrorPassword": "the password must contain at least 8 digits",
         "ErrorRePassword" : "passwords do not match",
-        "InvalidUser": "invalid User",
+        "InvalidUser": "Incorrect username or password",
         "Loading": "loading",
         "Dashboard": "dashboard"
     }

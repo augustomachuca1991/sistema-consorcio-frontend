@@ -1,10 +1,19 @@
 import LogoEdificio from '../assets/images/logos/LogoEdificio.svg'
 import { useTranslation } from "react-i18next";
-import React from 'react'
+import React from 'react';
+import { useAuth } from '../auth/AuthProvider';
+
 
 
 const DashboardPage = () => {
   const { t, i18n: { changeLanguage, language } } = useTranslation();
+  const auth = useAuth();
+
+  const handleSignOut = e => {
+    e.preventDefault();
+    auth.signOut();
+  };
+
   return (
 
     <div className="bg-gray-100 dark:bg-gray-900">
@@ -24,7 +33,7 @@ const DashboardPage = () => {
               alt="logo user"
               className="m-auto h-10 w-10 rounded-full object-cover lg:h-28 lg:w-28"
             />
-            <h5 className="mt-4 hidden text-xl font-semibold text-gray-600 lg:block dark:text-gray-300">Cynthia J. Watts</h5>
+            <h5 className="mt-4 hidden text-xl font-semibold text-gray-600 lg:block dark:text-gray-300">{auth.getUser()?.username}</h5>
             <span className="hidden text-gray-400 lg:block">Admin</span>
           </div>
 
@@ -154,7 +163,7 @@ const DashboardPage = () => {
         </div>
 
         <div className="-mx-6 flex items-center justify-between border-t px-6 pt-4 dark:border-gray-700">
-          <button className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 dark:text-gray-300">
+          <button className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 dark:text-gray-300" onClick={handleSignOut}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"

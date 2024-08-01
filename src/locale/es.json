@@ -14,7 +14,7 @@
         "ErrorEmail" : "por favor ingresa un correo electrónico válido",
         "ErrorPassword" : "la contraseña debe contener al menos 8 digitos",
         "ErrorRePassword" : "las contraseñas no coinciden",
-        "InvalidUser" : "usuario incorrecto",
+        "InvalidUser" : "usuario o contraseña incorrecto",
         "Loading" : "cargando",
         "Dashboard" : "panel de control",
         "UNIQUE constraint failed: users_user.email" : "el email ya se encuentra registrado."
