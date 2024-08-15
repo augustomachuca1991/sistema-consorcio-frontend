@@ -1,11 +1,11 @@
 import LogoEdificio from '/src/assets/images/logos/LogoEdificio.svg';
 import { useTranslation } from "react-i18next";
-import { useNavigate, Link } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useNavigate, Link, Navigate } from "react-router-dom";
+import { useState,  } from 'react';
 import { useFormik } from 'formik';
-import { useAuth } from '../auth/AuthProvider';
+import { useAuth } from "../auth/AuthProvider";
 
-const { VITE_BASE_URL } = import.meta.env
+const { VITE_API_URL } = import.meta.env
 
 const LoginPage = () => {
     const { t, i18n: { changeLanguage, language } } = useTranslation();
@@ -13,7 +13,7 @@ const LoginPage = () => {
     const [users, setUsers] = useState([]);
     const [msgError, setMsgError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const auth = useAuth();
+    const { saveUser, isAuthenticated } = useAuth();
 
 
     const initialValues = {
@@ -47,7 +47,7 @@ const LoginPage = () => {
         setMsgError("")
         try {
 
-            const response = await fetch(`${VITE_BASE_URL}/api/token/`, {
+            const response = await fetch(`${VITE_API_URL}/api/token/`, {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
@@ -66,24 +66,15 @@ const LoginPage = () => {
                 setMsgError(detail)
                 throw new Error(`${detail}`);
             }
-            const userAuth = await response.json();
-            auth.saveUser(userAuth);
-
+            const userData = await response.json();
+            saveUser(userData)
             navigate("/dashboard");
-            //return data
 
         } catch (error) {
             console.log(error)
         } finally {
             setIsLoading(false)
         }
-        /* const existUser = users.some((user) => user.email === email && user.password === password)
-        if (!existUser) {
-            setMsgError(t('InvalidUser'));
-            return;
-        }
-
-        navigate("/dashboard"); */
     }
 
     const formik = useFormik({
@@ -93,12 +84,10 @@ const LoginPage = () => {
     })
 
 
-    /* useEffect(() => {
-        fetch(`${VITE_BASE_URL}/users/`)
-            .then(response => response.json())
-            .then(data => setUsers(data.users));
+    if (isAuthenticated) {
+        return <Navigate to={`${import.meta.env.VITE_BASE_URL}dashboard`} />;
+    }
 
-    }, []) */
 
 
 

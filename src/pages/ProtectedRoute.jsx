@@ -1,23 +1,16 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
-import { useState, useEffect } from "react";
-
-const { VITE_BASE_URL } = import.meta.env
+import { useEffect } from "react";
 
 export default function ProtectedRoute() {
-    const auth = useAuth();
+    const {isAuthenticated} = useAuth();
     const navigate = useNavigate();
-    const [showRedirecting, setShowRedirecting] = useState(false);
 
     useEffect(() => {
-        if (!auth.isAuthenticated) {
+        if (!isAuthenticated) {
             navigate(`/`);
         }
-    }, [auth.isAuthenticated, navigate]);
+    }, [isAuthenticated]);
 
-    /* if (showRedirecting) {
-      return <LoadingScreen />;
-    } */
-
-    return !!auth.isAuthenticated && <Outlet />;
+    return !!isAuthenticated && <Outlet />;
 }

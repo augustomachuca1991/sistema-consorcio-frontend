@@ -1,15 +1,17 @@
 import LogoEdificio from '/src/assets/images/logos/LogoEdificio.svg';
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useNavigate, Link } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
+import { useAuth } from '../auth/AuthProvider';
 import { useFormik } from 'formik';
+import { useState } from 'react';
 
 
 const RegisterPages = () => {
   const { t, i18n: { changeLanguage, language } } = useTranslation();
   const navigate = useNavigate();
   const [msgError, setMsgError] = useState('')
-  const { VITE_BASE_URL } = import.meta.env
+  const { VITE_API_URL, VITE_BASE_URL } = import.meta.env
+  const { isAuthenticated } = useAuth()
 
   const initialValues = {
     email: '',
@@ -26,7 +28,7 @@ const RegisterPages = () => {
       if (!regex.test(email)) {
         errors.email = t('ErrorEmail');
       }
-    };
+    }
 
     if (!username) errors.username = t('Required', { Field: t('Username') });
 
@@ -34,16 +36,12 @@ const RegisterPages = () => {
     if (!repassword) errors.repassword = t('Required', { Field: t('RePassword') });
 
     if (password) {
-      if (password.length < 8) {
-        errors.password = t('ErrorPassword')
-      }
-    };
+      if (password.length < 8) errors.password = t('ErrorPassword')
+    }
 
     if (repassword && password) {
-      if (repassword !== password) {
-        errors.repassword = t('ErrorRePassword')
-      }
-    };
+      if (repassword !== password) errors.repassword = t('ErrorRePassword')
+    }
 
 
     return errors
@@ -58,7 +56,7 @@ const RegisterPages = () => {
       password
     };
 
-    fetch(`${VITE_BASE_URL}/users/store/`, {
+    fetch(`${VITE_API_URL}/users/store/`, {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -89,6 +87,11 @@ const RegisterPages = () => {
     onSubmit,
     validate
   })
+
+  if (isAuthenticated) {
+    return <Navigate to={`${VITE_BASE_URL}dashboard`} />;
+  }
+
   return (
     <div className="relative py-16">
       <div className="container relative m-auto px-6 text-gray-500 md:px-12 xl:px-40">
@@ -96,12 +99,12 @@ const RegisterPages = () => {
           <Link to={"/"}>
             <img src={LogoEdificio} loading="lazy" className="ml-4 w-36" alt="Edificios Murano" />
           </Link>
-          <div className="rounded-3xl border border-gray-100 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-2xl shadow-gray-600/10 backdrop-blur-2xl">
+          <div className="rounded-3xl border border-gray-100 bg-white  shadow-2xl shadow-gray-600/10 backdrop-blur-2xl">
             <div className="p-8 py-12 sm:p-16">
-              <h2 className="mb-8 text-2xl font-bold text-gray-800 dark:text-white">{t('SingUpTitleForm')}</h2>
+              <h2 className="mb-8 text-2xl font-bold text-gray-800 ">{t('SingUpTitleForm')}</h2>
               <form onSubmit={formik.handleSubmit} className="space-y-8">
                 <div>
-                  <label htmlFor="email" className="text-gray-600 dark:text-gray-300">{t('Email')}*</label>
+                  <label htmlFor="email" className="text-gray-600 ">{t('Email')}*</label>
                   <input
                     type="email"
                     name="email"
@@ -109,7 +112,7 @@ const RegisterPages = () => {
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     autoComplete="username"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.email && 'ring-2 ring-red-400'}`}
+                    className={`focus:outline-none block w-full rounded-md border border-gray-200 bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.email && 'ring-2 ring-red-400'}`}
                   />
                   <span className='text-red-500'>{formik.errors.email}</span>
                   {!!msgError && (
@@ -118,7 +121,7 @@ const RegisterPages = () => {
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <label htmlFor="username" className="text-gray-600 dark:text-gray-300">{t('Username')}*</label>
+                    <label htmlFor="username" className="text-gray-600 ">{t('Username')}*</label>
 
                   </div>
                   <input
@@ -128,14 +131,14 @@ const RegisterPages = () => {
                     value={formik.values.username}
                     onChange={formik.handleChange}
                     autoComplete="current-username"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.username && 'ring-2 ring-red-400'}`}
+                    className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.username && 'ring-2 ring-red-400'}`}
                   />
                   <span className='text-red-500'>{formik.errors.username}</span>
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between">
-                    <label htmlFor="password" className="text-gray-600 dark:text-gray-300">{t('Password')}*</label>
+                    <label htmlFor="password" className="text-gray-600 ">{t('Password')}*</label>
 
                   </div>
                   <input
@@ -145,13 +148,13 @@ const RegisterPages = () => {
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     autoComplete="current-password"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.password && 'ring-2 ring-red-400'}`}
+                    className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.password && 'ring-2 ring-red-400'}`}
                   />
                   <span className='text-red-500'>{formik.errors.password}</span>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <label htmlFor="repassword" className="text-gray-600 dark:text-gray-300">{t('RePassword')}*</label>
+                    <label htmlFor="repassword" className="text-gray-600 ">{t('RePassword')}*</label>
 
                   </div>
                   <input
@@ -161,15 +164,15 @@ const RegisterPages = () => {
                     value={formik.values.repassword}
                     onChange={formik.handleChange}
                     autoComplete="current-repassword"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.repassword && 'ring-2 ring-red-400'}`}
+                    className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.repassword && 'ring-2 ring-red-400'}`}
                   />
                   <span className='text-red-500'>{formik.errors.repassword}</span>
                 </div>
 
                 <button type="submit" className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
-                  <span className="relative text-base font-semibold text-white dark:text-dark">{t('SingUp')}</span>
+                  <span className="relative text-base font-semibold text-white ">{t('SingUp')}</span>
                 </button>
-                <p className="border-t border-gray-100 dark:border-gray-700 pt-6 text-sm text-gray-400 dark:text-gray-400">
+                <p className="border-t border-gray-100  pt-6 text-sm text-gray-400 ">
                   todo los campos (*) son obligatorios
                 </p>
 
