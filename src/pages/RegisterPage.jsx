@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from '../auth/AuthProvider';
 import { useFormik } from 'formik';
 import { useState } from 'react';
+import LogoComponent from '../components/LogoComponent';
 
 
 const RegisterPages = () => {
@@ -96,9 +97,7 @@ const RegisterPages = () => {
     <div className="relative py-16">
       <div className="container relative m-auto px-6 text-gray-500 md:px-12 xl:px-40">
         <div className="m-auto space-y-8 md:w-8/12 lg:w-6/12 xl:w-6/12">
-          <Link to={"/"}>
-            <img src={LogoEdificio} loading="lazy" className="ml-4 w-36" alt="Edificios Murano" />
-          </Link>
+          <LogoComponent />
           <div className="rounded-3xl border border-gray-100 bg-white  shadow-2xl shadow-gray-600/10 backdrop-blur-2xl">
             <div className="p-8 py-12 sm:p-16">
               <h2 className="mb-8 text-2xl font-bold text-gray-800 ">{t('SingUpTitleForm')}</h2>

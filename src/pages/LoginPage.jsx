@@ -1,16 +1,17 @@
-import LogoEdificio from '/src/assets/images/logos/LogoEdificio.svg';
-import { useTranslation } from "react-i18next";
-import { useNavigate, Link, Navigate } from "react-router-dom";
-import { useState,  } from 'react';
-import { useFormik } from 'formik';
-import { useAuth } from "../auth/AuthProvider";
 
-const { VITE_API_URL } = import.meta.env
+import { useNavigate, Link, Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "../auth/AuthProvider";
+import { login } from "../api/loginUserAPI"
+import { useState, } from 'react';
+import { useFormik } from 'formik';
+import LogoComponent from "../components/LogoComponent";
+
+const { VITE_BASE_URL } = import.meta.env
 
 const LoginPage = () => {
-    const { t, i18n: { changeLanguage, language } } = useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
     const [msgError, setMsgError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const { saveUser, isAuthenticated } = useAuth();
@@ -37,43 +38,21 @@ const LoginPage = () => {
                 errors.password = t('ErrorPassword')
             }
         }
-
-
         return errors
     }
 
     const onSubmit = async ({ email, password }) => {
-        setIsLoading(true)
-        setMsgError("")
+        setIsLoading(true);
+        setMsgError('');
         try {
-
-            const response = await fetch(`${VITE_API_URL}/api/token/`, {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username: "admin", password: password })
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    setMsgError(t('InvalidUser'))
-                    throw new Error(`${t('InvalidUser')}`);
-                }
-
-                const { detail } = await response.json()
-                setMsgError(detail)
-                throw new Error(`${detail}`);
-            }
-            const userData = await response.json();
-            saveUser(userData)
-            navigate("/dashboard");
-
+            const userData = await login(email, password);
+            saveUser(userData);
+            navigate(`${VITE_BASE_URL}dashboard`);
         } catch (error) {
-            console.log(error)
+            setMsgError(error.message);
+            console.error('Login error:', error);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }
 
@@ -85,25 +64,20 @@ const LoginPage = () => {
 
 
     if (isAuthenticated) {
-        return <Navigate to={`${import.meta.env.VITE_BASE_URL}dashboard`} />;
+        return <Navigate to={`${VITE_BASE_URL}dashboard`} />;
     }
-
-
-
 
     return (
         <div className="relative py-16">
             <div className="container relative m-auto px-6 text-gray-500 md:px-12 xl:px-40">
                 <div className="m-auto space-y-8 md:w-8/12 lg:w-6/12 xl:w-6/12">
-                    <Link to={"/"}>
-                        <img src={LogoEdificio} loading="lazy" className="ml-4 w-36" alt="Edificios Murano" />
-                    </Link>
+                    <LogoComponent />
                     <div className="rounded-3xl border border-gray-100 bg-white   shadow-2xl shadow-gray-600/10 backdrop-blur-2xl">
                         <div className="p-8 py-12 sm:p-16">
-                            <h2 className="mb-8 text-2xl font-bold text-gray-800 ">{t('SingInTitleForm')}</h2>
+                            <h2 className="mb-8 text-2xl font-bold text-gray-800 capitalize-first-letter">{t('SingInTitleForm')}</h2>
                             <form onSubmit={formik.handleSubmit} className="space-y-8">
                                 <div>
-                                    <label htmlFor="email" className="text-gray-600 ">{t('Email')}</label>
+                                    <label htmlFor="email" className="text-gray-600">{t('Email')}</label>
                                     <input
                                         type="email"
                                         name="email"
@@ -145,10 +119,10 @@ const LoginPage = () => {
 
                                 </button>
 
-                                <p className="border-t border-gray-100  pt-6 text-sm text-gray-500">
+                                <p className="border-t border-gray-100  pt-6 text-sm text-gray-500 capitalize-first-letter">
                                     {t('NoAccount')}
                                     {/* <a href="#" className="text-primary ml-1">{t('SingUp')}</a> */}
-                                    <Link to={'register'} className="text-primary ml-1">{t('SingUp')}</Link>
+                                    <Link to={'register'} className="text-primary ml-1 uppercase">{t('SingUp')}</Link>
                                 </p>
                             </form>
                         </div>

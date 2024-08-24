@@ -1,14 +1,14 @@
-import React from 'react'
-import { useAuth } from '../auth/AuthProvider';
 import LogoEdificio from '../assets/images/logos/LogoEdificio.svg'
+import { useAuth } from '../auth/AuthProvider';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import LogoComponent from '../components/LogoComponent';
 
 const LayoutsAdminPages = ({ children }) => {
 
     const { signOut, getUser } = useAuth();
     const { VITE_BASE_URL } = import.meta.env
-    const { t, i18n: { changeLanguage, language } } = useTranslation();
+    const { t } = useTranslation();
 
 
     const handleSignOut = e => {
@@ -17,15 +17,13 @@ const LayoutsAdminPages = ({ children }) => {
     };
 
     return (
-        <div className="bg-gray-100 dark:bg-gray-900">
+        <div className="bg-gray-100">
             <aside
-                className="fixed top-0 z-10 ml-[-100%] flex h-screen w-full flex-col justify-between border-r bg-white px-6 pb-3 transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%] dark:bg-gray-800 dark:border-gray-700"
+                className="fixed top-0 z-10 ml-[-100%] flex h-screen w-full flex-col justify-between border-r bg-white px-6 pb-3 transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%] "
             >
                 <div>
-                    <div className="-mx-6 px-6 py-4">
-                        <a href="#" title="home">
-                            <img src={LogoEdificio} className="w-24" alt="tailus logo" />
-                        </a>
+                    <div className="-mx-6 px-6 py-4 flex items-center cursor-pointer">
+                        <LogoComponent/>
                     </div>
 
                     <div className="mt-8 text-center">
@@ -34,7 +32,7 @@ const LayoutsAdminPages = ({ children }) => {
                             alt="logo user"
                             className="m-auto h-10 w-10 rounded-full object-cover lg:h-28 lg:w-28"
                         />
-                        <h5 className="mt-4 hidden text-xl font-semibold text-gray-600 lg:block dark:text-gray-300">{getUser()?.username}</h5>
+                        <h5 className="mt-4 hidden text-xl font-semibold text-gray-600 lg:block ">{getUser()?.username}</h5>
                         <span className="hidden text-gray-400 lg:block">Admin</span>
                     </div>
 
@@ -48,7 +46,7 @@ const LayoutsAdminPages = ({ children }) => {
                                 <svg className="-ml-1 h-6 w-6" viewBox="0 0 24 24" fill="none">
                                     <path
                                         d="M6 8a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8ZM6 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1Z"
-                                        className="dark:fill-slate-600 fill-current text-cyan-400"
+                                        className="fill-current text-cyan-400"
                                     ></path>
                                     <path
                                         d="M13 8a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2V8Z"
@@ -65,7 +63,7 @@ const LayoutsAdminPages = ({ children }) => {
                         <li>
                             <Link
                                 to={`${VITE_BASE_URL}edificios`}
-                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 dark:text-gray-300"
+                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -80,17 +78,17 @@ const LayoutsAdminPages = ({ children }) => {
                                         clipRule="evenodd"
                                     />
                                     <path
-                                        className="fill-current text-gray-600 group-hover:text-cyan-600 dark:group-hover:text-sky-400"
+                                        className="fill-current text-gray-600 group-hover:text-cyan-600 "
                                         d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z"
                                     />
                                 </svg>
-                                <span className="group-hover:text-gray-700 dark:group-hover:text-gray-50">Edificios</span>
+                                <span className="group-hover:text-gray-700 ">Edificios</span>
                             </Link>
                         </li>
                         <li>
                             <a
                                 href="#"
-                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 dark:text-gray-300"
+                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +97,7 @@ const LayoutsAdminPages = ({ children }) => {
                                     fill="currentColor"
                                 >
                                     <path
-                                        className="fill-current text-gray-600 group-hover:text-cyan-600 dark:group-hover:text-sky-400"
+                                        className="fill-current text-gray-600 group-hover:text-cyan-600 "
                                         fillRule="evenodd"
                                         d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z"
                                         clipRule="evenodd"
@@ -109,13 +107,13 @@ const LayoutsAdminPages = ({ children }) => {
                                         d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"
                                     />
                                 </svg>
-                                <span className="group-hover:text-gray-700 dark:group-hover:text-gray-50">Reports</span>
+                                <span className="group-hover:text-gray-700 ">Reports</span>
                             </a>
                         </li>
                         <li>
                             <a
                                 href="#"
-                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 dark:text-gray-300"
+                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +122,7 @@ const LayoutsAdminPages = ({ children }) => {
                                     fill="currentColor"
                                 >
                                     <path
-                                        className="fill-current text-gray-600 group-hover:text-cyan-600 dark:group-hover:text-cyan-400"
+                                        className="fill-current text-gray-600 group-hover:text-cyan-600 "
                                         d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"
                                     />
                                     <path
@@ -132,13 +130,13 @@ const LayoutsAdminPages = ({ children }) => {
                                         d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"
                                     />
                                 </svg>
-                                <span className="group-hover:text-gray-700 dark:group-hover:text-gray-50">Other data</span>
+                                <span className="group-hover:text-gray-700 ">Other data</span>
                             </a>
                         </li>
                         <li>
                             <a
                                 href="#"
-                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 dark:text-gray-300"
+                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -151,20 +149,20 @@ const LayoutsAdminPages = ({ children }) => {
                                         d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"
                                     />
                                     <path
-                                        className="fill-current text-gray-600 group-hover:text-cyan-600 dark:group-hover:text-sky-400"
+                                        className="fill-current text-gray-600 group-hover:text-cyan-600 "
                                         fillRule="evenodd"
                                         d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                                <span className="group-hover:text-gray-700 dark:group-hover:text-white">Finance</span>
+                                <span className="group-hover:text-gray-700">Finance</span>
                             </a>
                         </li>
                     </ul>
                 </div>
 
-                <div className="-mx-6 flex items-center justify-between border-t px-6 pt-4 dark:border-gray-700">
-                    <button className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 dark:text-gray-300" onClick={handleSignOut}>
+                <div className="-mx-6 flex items-center justify-between border-t px-6 pt-4 ">
+                    <button className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 " onClick={handleSignOut}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6"
@@ -179,15 +177,15 @@ const LayoutsAdminPages = ({ children }) => {
                                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                             />
                         </svg>
-                        <span className="group-hover:text-gray-700 dark:group-hover:text-white">Logout</span>
+                        <span className="group-hover:text-gray-700">Logout</span>
                     </button>
                 </div>
             </aside>
             <div className="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
-                <div className="sticky top-0 h-16 border-b bg-white dark:bg-gray-800 dark:border-gray-700 lg:py-2.5">
+                <div className="sticky top-0 h-16 border-b bg-white lg:py-2.5">
                     <div className="flex items-center justify-between space-x-4 px-6 2xl:container">
-                        <h5 hidden className="text-2xl font-medium text-gray-600 lg:block dark:text-white">{t('Dashboard')}</h5>
-                        <button className="-mr-2 h-16 w-12 border-r lg:hidden dark:border-gray-700 dark:text-gray-300">
+                        <h5 hidden className="text-2xl font-medium text-gray-600 lg:block ">{t('Dashboard')}</h5>
+                        <button className="-mr-2 h-16 w-12 border-r lg:hidden  ">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="my-auto h-6 w-6"
@@ -206,7 +204,7 @@ const LayoutsAdminPages = ({ children }) => {
                         <div className="flex space-x-4">
                             <div hidden className="md:block">
                                 <div className="relative flex items-center text-gray-400 focus-within:text-cyan-400">
-                                    <span className="absolute left-4 flex h-6 items-center border-r border-gray-300 pr-3 dark:border-gray-700">
+                                    <span className="absolute left-4 flex h-6 items-center border-r border-gray-300 pr-3 ">
                                         <svg
                                             xmlns="http://ww50w3.org/2000/svg"
                                             className="w-4 fill-current"
@@ -224,17 +222,17 @@ const LayoutsAdminPages = ({ children }) => {
                                         name="leadingIcon"
                                         id="leadingIcon"
                                         placeholder="Search here"
-                                        className="outline-none w-full rounded-xl border border-gray-300 py-2.5 pl-14 pr-4 text-sm text-gray-600 transition focus:border-cyan-300 dark:bg-gray-900 dark:border-gray-700"
+                                        className="outline-none w-full rounded-xl border border-gray-300 py-2.5 pl-14 pr-4 text-sm text-gray-600 transition focus:border-cyan-300  "
                                     />
                                 </div>
                             </div>
                             <button
                                 aria-label="search"
-                                className="h-10 w-10 rounded-xl border bg-gray-100 active:bg-gray-200 md:hidden dark:bg-gray-700 dark:border-gray-600 dark:active:bg-gray-800"
+                                className="h-10 w-10 rounded-xl border bg-gray-100 active:bg-gray-200 md:hidden "
                             >
                                 <svg
                                     xmlns="http://ww50w3.org/2000/svg"
-                                    className="mx-auto w-4 fill-current text-gray-600 dark:text-gray-300"
+                                    className="mx-auto w-4 fill-current text-gray-600 "
                                     viewBox="0 0 35.997 36.004"
                                 >
                                     <path
@@ -246,11 +244,11 @@ const LayoutsAdminPages = ({ children }) => {
                             </button>
                             <button
                                 aria-label="chat"
-                                className="h-10 w-10 rounded-xl border bg-gray-100 active:bg-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:active:bg-gray-800"
+                                className="h-10 w-10 rounded-xl border bg-gray-100 active:bg-gray-200 "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className="m-auto h-5 w-5 text-gray-600 dark:text-gray-300"
+                                    className="m-auto h-5 w-5 text-gray-600 "
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -265,11 +263,11 @@ const LayoutsAdminPages = ({ children }) => {
                             </button>
                             <button
                                 aria-label="notification"
-                                className="h-10 w-10 rounded-xl border bg-gray-100 active:bg-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:active:bg-gray-800"
+                                className="h-10 w-10 rounded-xl border bg-gray-100 active:bg-gray-200 "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className="m-auto h-5 w-5 text-gray-600 dark:text-gray-300"
+                                    className="m-auto h-5 w-5 text-gray-600 "
                                     viewBox="0 0 20 20"
                                     fill="currentColor"
                                 >
@@ -281,7 +279,6 @@ const LayoutsAdminPages = ({ children }) => {
                         </div>
                     </div>
                 </div>
-
                 {children}
             </div>
         </div>

@@ -27,6 +27,11 @@ export default {
       'secondary': '#007FEC'
     }
   },
+  variants: {
+    extend: {
+      textTransform: ['first-letter'],
+    },
+  },
   plugins: [],
 }
 
