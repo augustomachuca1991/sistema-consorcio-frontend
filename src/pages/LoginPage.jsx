@@ -6,6 +6,8 @@ import { login } from "../api/loginUserAPI"
 import { useState, } from 'react';
 import { useFormik } from 'formik';
 import LogoComponent from "../components/LogoComponent";
+import InputComponent from "../components/InputComponent";
+import { ValidateErrorComponent } from "../components/ValidateErrorComponent";
 
 const { VITE_BASE_URL } = import.meta.env
 
@@ -77,20 +79,9 @@ const LoginPage = () => {
                             <h2 className="mb-8 text-2xl font-bold text-gray-800 capitalize-first-letter">{t('SingInTitleForm')}</h2>
                             <form onSubmit={formik.handleSubmit} className="space-y-8">
                                 <div>
-                                    <label htmlFor="email" className="text-gray-600">{t('Email')}</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        id="email"
-                                        value={formik.values.email}
-                                        onChange={formik.handleChange}
-                                        autoComplete="username"
-                                        className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.email && 'ring-2 ring-red-400'}`}
-                                    />
-                                    <span className='text-red-500'>{formik.errors.email}</span>
-                                    {!!msgError && (
-                                        <span className='text-red-500'>{msgError}</span>
-                                    )}
+                                    <InputComponent name={'email'} type={'email'} value={formik.values.email} onChange={formik.handleChange} msgError={formik.errors.email}/>
+                                    <ValidateErrorComponent msg={formik.errors.email}/>
+                                    <ValidateErrorComponent msg={msgError}/>
                                 </div>
 
                                 <div>

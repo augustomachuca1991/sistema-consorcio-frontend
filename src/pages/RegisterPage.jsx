@@ -5,12 +5,16 @@ import { useAuth } from '../auth/AuthProvider';
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import LogoComponent from '../components/LogoComponent';
+import { register } from '../api/registerUserAPI';
+import InputComponent from '../components/InputComponent';
+import { ValidateErrorComponent } from '../components/ValidateErrorComponent';
 
 
 const RegisterPages = () => {
-  const { t, i18n: { changeLanguage, language } } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [msgError, setMsgError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const { VITE_API_URL, VITE_BASE_URL } = import.meta.env
   const { isAuthenticated } = useAuth()
 
@@ -48,8 +52,10 @@ const RegisterPages = () => {
     return errors
   }
 
-  const onSubmit = ({ username, email, password }) => {
+  const onSubmit = async ({ username, email, password }) => {
     setMsgError("");
+    setIsLoading(true)
+
 
     const params = {
       username,
@@ -57,30 +63,15 @@ const RegisterPages = () => {
       password
     };
 
-    fetch(`${VITE_API_URL}/users/store/`, {
-      method: "POST",
-      body: JSON.stringify(params),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(errorData => {
-            console.log(t(errorData.error))
-            throw new Error(t(errorData.error));
-          });
-        }
-        return response.json();
-      })
-      .then(json => {
-        console.log(json);
-        navigate('/'); // Redirigir a la página de inicio de sesión
-      })
-      .catch(err => {
-        console.error('Error al enviar la solicitud:', err);
-        setMsgError(err.message); // Manejar errores de manera adecuada
-      });
+    try {
+      await register(params);
+      navigate(`${VITE_BASE_URL}`);
+    } catch (error) {
+      setMsgError(error.message);
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formik = useFormik({
@@ -103,73 +94,26 @@ const RegisterPages = () => {
               <h2 className="mb-8 text-2xl font-bold text-gray-800 ">{t('SingUpTitleForm')}</h2>
               <form onSubmit={formik.handleSubmit} className="space-y-8">
                 <div>
-                  <label htmlFor="email" className="text-gray-600 ">{t('Email')}*</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    autoComplete="username"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200 bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.email && 'ring-2 ring-red-400'}`}
-                  />
-                  <span className='text-red-500'>{formik.errors.email}</span>
-                  {!!msgError && (
-                    <span className='text-red-500'>{msgError}</span>
-                  )}
+                  <InputComponent name={'email'} type={'email'} value={formik.values.email} onChange={formik.handleChange} msgError={formik.errors.email} />
+                  <ValidateErrorComponent msg={formik.errors.email} />
+                  <ValidateErrorComponent msg={msgError} />
                 </div>
                 <div>
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="username" className="text-gray-600 ">{t('Username')}*</label>
-
-                  </div>
-                  <input
-                    type="username"
-                    name="username"
-                    id="username"
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                    autoComplete="current-username"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.username && 'ring-2 ring-red-400'}`}
-                  />
-                  <span className='text-red-500'>{formik.errors.username}</span>
+                  <InputComponent name={'username'} type={'text'} value={formik.values.username} onChange={formik.handleChange} msgError={formik.errors.username} />
+                  <ValidateErrorComponent msg={formik.errors.username} />
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="password" className="text-gray-600 ">{t('Password')}*</label>
-
-                  </div>
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    autoComplete="current-password"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.password && 'ring-2 ring-red-400'}`}
-                  />
-                  <span className='text-red-500'>{formik.errors.password}</span>
+                  <InputComponent name={'password'} type={'password'} value={formik.values.password} onChange={formik.handleChange} msgError={formik.errors.password} />
+                  <ValidateErrorComponent msg={formik.errors.password} />
                 </div>
                 <div>
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="repassword" className="text-gray-600 ">{t('RePassword')}*</label>
-
-                  </div>
-                  <input
-                    type="repassword"
-                    name="repassword"
-                    id="repassword"
-                    value={formik.values.repassword}
-                    onChange={formik.handleChange}
-                    autoComplete="current-repassword"
-                    className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.repassword && 'ring-2 ring-red-400'}`}
-                  />
-                  <span className='text-red-500'>{formik.errors.repassword}</span>
+                  <InputComponent name={'repassword'} type={'password'} value={formik.values.repassword} onChange={formik.handleChange} msgError={formik.errors.repassword} />
+                  <ValidateErrorComponent msg={formik.errors.repassword} />
                 </div>
 
-                <button type="submit" className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
-                  <span className="relative text-base font-semibold text-white ">{t('SingUp')}</span>
+                <button type="submit" className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95" disabled={isLoading}>
+                  <span className="relative text-base font-semibold text-white ">{isLoading ? 'loading...' : t('SingUp')}</span>
                 </button>
                 <p className="border-t border-gray-100  pt-6 text-sm text-gray-400 ">
                   todo los campos (*) son obligatorios

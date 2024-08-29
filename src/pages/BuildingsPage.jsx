@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
 import LayoutsAdminPages from "../layouts/LayoutsAdminPages";
+import { ValidateErrorComponent } from "../components/ValidateErrorComponent";
 
 
 //import DashboardPage from './DashboardPage'; 
@@ -234,10 +235,8 @@ const BuildingsPage = () => {
                             autoComplete="nombre"
                             className={`focus:outline-none block w-full rounded-md border border-gray-200 bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.nombre && 'ring-2 ring-red-400'}`}
                         />
-                        <span className='text-red-500'>{formik.errors.nombre}</span>
-                        {!!msgError && (
-                            <span className='text-red-500'>{msgError}</span>
-                        )}
+                        <ValidateErrorComponent msg={formik.errors.nombre} />
+                        <ValidateErrorComponent msg={msgError} />
                     </div>
 
                     <div>
@@ -253,7 +252,7 @@ const BuildingsPage = () => {
                             autoComplete="current-direccion"
                             className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.direccion && 'ring-2 ring-red-400'}`}
                         />
-                        <span className='text-red-500'>{formik.errors.direccion}</span>
+                        <ValidateErrorComponent msg={formik.errors.direccion} />
                     </div>
 
                     <div>
@@ -269,7 +268,8 @@ const BuildingsPage = () => {
                             autoComplete="current-telefono"
                             className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 ${formik.errors.telefono && 'ring-2 ring-red-400'}`}
                         />
-                        <span className='text-red-500'>{formik.errors.telefono}</span>
+                        <ValidateErrorComponent msg={formik.errors.telefono} />
+
                     </div>
                     <div className="flex items-center">
                         {showAgregar && (
@@ -289,9 +289,6 @@ const BuildingsPage = () => {
 
                 <div className=" bg-gray-200 rounded-lg">
                     <h3 className="font-semibold text-xl tracking-wider leading-5 text-center py-3"> Lista de edificios</h3>
-                    {!!msgError && (
-                        <p>{msgError}</p>
-                    )}
                     {
                         edificios.length ? (
                             <ul className="p-2 space-y-2">
