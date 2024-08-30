@@ -1,61 +1,40 @@
 import { useTranslation } from 'react-i18next';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import LayoutsAdminPages from "../layouts/LayoutsAdminPages";
 import { useFormik } from 'formik';
 import { ValidateErrorComponent } from '../components/ValidateErrorComponent';
 import InputComponent from '../components/InputComponent';
+import { getAll } from "../api/buildingApi"
 
-const EDIFICIOS = [
 
-    {
-        id_edificio: '1',
-        nombre: 'edificio 1',
-        direccion: 'direccion 1',
-        telefono: 'telefono 1',
-        created_at: '',
-    },
-    {
-        id_edificio: '2',
-        nombre: 'edificio 2',
-        direccion: 'direccion 2',
-        telefono: 'telefono 2',
-        created_at: '',
-    },
-    {
-        id_edificio: '3',
-        nombre: 'edificio 3',
-        direccion: 'direccion 3',
-        telefono: 'telefono 3',
-        created_at: '',
-    },
-    {
-        id_edificio: '4',
-        nombre: 'edificio 4',
-        direccion: 'direccion 4',
-        telefono: 'telefono 4',
-        created_at: '',
-    },
-]
+
 
 function InmueblesPages() {
-
+    const [edificios, setEdificios] = useState([])
     const { t } = useTranslation();
     const initialValues = {
+        edificio: '',
         ubicacion: '',
-        porcentaje: 0
+        porcentaje: 10
     }
 
-    const validate = ({ ubicacion, porcentaje }) => {
+    const validate = ({ ubicacion, porcentaje, edificio }) => {
         let errors = {}
-
+        if (!edificio) errors.edificio = t('Required', { Field: t('Building') })
         if (!ubicacion) errors.ubicacion = t('Required', { Field: t('Location') })
         if (!porcentaje) errors.porcentaje = t('Required', { Field: t('Percentage') })
         return errors
     }
 
     const onSubmit = async (values) => {
-        console.log('click en submit')
+        console.log(values.edificio)
+        console.log(values.porcentaje)
+        console.log(values.ubicacion)
+    };
+
+    const handleCreate = () => {
+        formik.handleSubmit(); // Esto manejará el envío y la validación
     };
 
     const formik = useFormik({
@@ -63,6 +42,19 @@ function InmueblesPages() {
         onSubmit,
         validate
     })
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { edificio } = await getAll();
+                setEdificios(edificio);
+            } catch (error) {
+                setMsgError(error.message)
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, [])
     return (
         <LayoutsAdminPages>
 
@@ -72,13 +64,17 @@ function InmueblesPages() {
                     <div>
                         <label htmlFor="edificios" className="text-gray-600">{t('edificios')}</label>
                         <select
-
-                            className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 capitalize ${formik.errors.email && 'ring-2 ring-red-400'}`}
+                            name="edificio"
+                            value={formik.values.edificio}
+                            onChange={formik.handleChange}
+                            className={`focus:outline-none block w-full rounded-md border border-gray-200  bg-transparent px-4 py-3 text-gray-600 transition duration-300 invalid:ring-2 invalid:ring-red-400 focus:ring-2 focus:ring-cyan-300 capitalize ${formik.errors.edificio && 'ring-2 ring-red-400'}`}
                         >
-                            {EDIFICIOS.map((edificio, indexEdificio) => (
+                            <option value="" label="Selecciona un edificio" />
+                            {edificios.map((edificio, indexEdificio) => (
                                 <option key={indexEdificio} value={edificio.id_edificio}>{edificio.nombre}</option>
                             ))}
                         </select>
+                        <ValidateErrorComponent msg={formik.errors.edificio} />
                     </div>
                     <div>
                         <InputComponent type={'text'} name={'ubicacion'} value={formik.values.ubicacion} onChange={formik.handleChange} msgError={formik.errors.ubicacion} />
@@ -87,6 +83,11 @@ function InmueblesPages() {
                     <div>
                         <InputComponent type={'number'} name={'porcentaje(%)'} value={formik.values.porcentaje} onChange={formik.handleChange} msgError={formik.errors.porcentaje} />
                         <ValidateErrorComponent msg={formik.errors.porcentaje} />
+                    </div>
+                    <div className="flex items-center">
+
+                        <button type="button" onClick={handleCreate} className="bg-secondary text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">Agregar nuevo inmueble</button>
+
                     </div>
                 </form>
             </div>

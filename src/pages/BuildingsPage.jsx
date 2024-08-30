@@ -5,21 +5,23 @@ import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
 import LayoutsAdminPages from "../layouts/LayoutsAdminPages";
 import { ValidateErrorComponent } from "../components/ValidateErrorComponent";
-
-
-//import DashboardPage from './DashboardPage'; 
+import { getAll, remove, store, update } from "../api/buildingApi"
+import ModalComponent from "../components/ModalComponent";
 
 const { VITE_API_URL } = import.meta.env
 
 
 const BuildingsPage = () => {
-    const [msgError, setMsgError] = useState("");
-    const [edificios, setEdificios] = useState([]);
-    const { t } = useTranslation();
+
     const [selectedEdificio, setSelectedEdificio] = useState(null);
-    const [showGuardarCambios, setShowGuardarCambios] = useState(false);//visibilidad del boton
-    const [showAgregar, setShowAgregar] = useState(true); //visibilidad del boton
+    const [isLoading, setIsLoading] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [edificios, setEdificios] = useState([]);
+    const [msgError, setMsgError] = useState("");
+    const [isShow, setIsShow] = useState(false);
     const { getAccessToken } = useAuth();
+    const { t } = useTranslation();
+
 
 
     const initialValues = {
@@ -36,145 +38,42 @@ const BuildingsPage = () => {
         return errors;
     };
 
-    const formik = useFormik({
-        initialValues: selectedEdificio || initialValues,
-        validate,
-        onSubmit: (values) => {
-            if (!formik.errors.nombre && !formik.errors.direccion && !formik.errors.telefono) {
-                if (selectedEdificio) {
-                    updateEdificio(values); // Si hay un edificio seleccionado, lo actualiza
-                } else {
-                    storeEdificio(values); // Si no, lo crea
+
+    const onSubmit = async (values) => {
+        setMsgError("");
+        setIsLoading(true)
+        try {
+            let response
+            if (editMode) {
+                if (!selectedEdificio?.id_edificio) {
+                    throw new Error("no hay edificio seleccionado");
                 }
+                response = await update(selectedEdificio.id_edificio, values)
+                setEditMode(false)
             } else {
-                console.log('Formulario no válido:', formik.errors);
+                response = await store(values)
             }
-        },
+            console.log(response)
+        } catch (error) {
+            console.log(error.message)
+        } finally {
+            setIsLoading(false)
+
+        }
+    }
+
+    const formik = useFormik({
+        initialValues,
+        validate,
+        onSubmit
     });
-
-    //el Store por separado
-    const storeEdificio = ({ nombre, direccion, telefono }) => {
-        setMsgError("");
-        const params = { nombre, direccion, telefono };
-
-        fetch(`${VITE_API_URL}/edificio/store/`, {
-            method: 'POST',
-            body: JSON.stringify(params),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        console.log(t(errorData.error));
-                        throw new Error(t(errorData.error));
-                    });
-                }
-                return response.json();
-            })
-            .then(json => {
-                console.log(json);
-                handleReset();
-            })
-            .catch(err => {
-                console.error('Error al enviar la solicitud:', err);
-                setMsgError(err.message);
-            });
-    };
-
-    //el Update por separado
-    const updateEdificio = ({ nombre, direccion, telefono }) => {
-        setMsgError("");
-        const params = { nombre, direccion, telefono };
-
-        if (selectedEdificio && selectedEdificio.id_edificio) {
-            fetch(`${VITE_API_URL}/edificio/update/${selectedEdificio.id_edificio}/`, {
-                method: 'PUT',
-                body: JSON.stringify(params),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(errorData => {
-                            console.log(t(errorData.error));
-                            throw new Error(t(errorData.error));
-                        });
-                    }
-                    return response.json();
-                })
-                .then(json => {
-                    console.log(json);
-                    handleReset();
-                    setSelectedEdificio(null);
-                    setShowGuardarCambios(false);
-
-                })
-                .catch(err => {
-                    console.error('Error al enviar la solicitud:', err);
-                    setMsgError(err.message);
-                });
-        } else {
-            console.error('No hay un edificio seleccionado o el ID es undefined');
-        }
-    };
-
-    //delete por separado
-    const deleteEdificio = async (id) => {
-        if (window.confirm(t(`Are you sure you want to delete this record ID ${id}?`))) {
-            try {
-                const response = await fetch(`${VITE_API_URL}/edificio/delete/${id}/`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => {
-                        return { error: 'Failed to parse error response as JSON' };
-                    });
-                    console.error('Error:', errorData);
-                    setMsgError(errorData.error || 'An unknown error occurred.');
-                    return;
-                }
-
-                // Solo intentar convertir a JSON si hay contenido en la respuesta
-                const result = await response.json().catch(() => {
-                    return { message: 'Deleted successfully' }; // Fallback in case of empty response
-                });
-                console.log('Delete successful:', result.message);
-                // Aquí puedes actualizar la UI o mostrar un mensaje de éxito
-            } catch (err) {
-                console.error('Error al enviar la solicitud:', err);
-                setMsgError(err.message);
-            }
-        }
-    };
-
-
-
 
     //las distintas funciones handle
     const handleReset = () => {
         formik.resetForm();
         setSelectedEdificio(null);
-        setShowGuardarCambios(false);
-        setShowAgregar(true); // para que este boton este visible siempre al iniciar o resetear
+        setEditMode(false)
 
-    };
-
-    const handleCreate = () => {
-        formik.handleSubmit(); // Esto manejará el envío y la validación
-    };
-
-    const handleUpdate = () => {
-        formik.handleSubmit(); // Esto también manejará el envío y la validación
     };
 
     const handleSelectEdificio = (edificio) => {
@@ -184,16 +83,23 @@ const BuildingsPage = () => {
             direccion: edificio.direccion,
             telefono: edificio.telefono,
         });
-        setShowGuardarCambios(true);//visible el boton
-        setShowAgregar(false); // Oculta el botón "Agregar nuevo edificio"
+        setEditMode(true)
     };
 
     const handleDelete = async (id) => {
-        await deleteEdificio(id);
+        if (window.confirm(t(`Are you sure you want to delete this record ID ${id}?`))) {
+            try {
+                const { message } = await remove(id)
+                console.log(message)
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
     };
 
     const handleShow = (edificio) => {
-        // Implementa la lógica para mostrar detalles del edificio aquí
+        setSelectedEdificio(edificio);
+        setIsShow(true)
     };
 
 
@@ -201,22 +107,21 @@ const BuildingsPage = () => {
 
     //mostrar la lista de edificios
     useEffect(() => {
-        fetch(`${VITE_API_URL}/edificio/`).then(response => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    console.log(t(errorData.error))
-                    throw new Error(t(errorData.error));
-                });
+
+        const fetchData = async () => {
+            try {
+                const { edificio } = await getAll();
+                setEdificios(edificio);
+            } catch (error) {
+                setMsgError(error.message)
+                console.error('Error fetching data:', error);
             }
-            return response.json();
-        }).then(json => {
-            setEdificios(json.edificio)
-        })
-            .catch(err => {
-                console.error('Error al enviar la solicitud:', err);
-                setMsgError(err.message); // Manejar errores de manera adecuada
-            });
+        };
+        fetchData();
     }, [])
+
+
+
 
 
     return (
@@ -241,7 +146,7 @@ const BuildingsPage = () => {
 
                     <div>
                         <div className="flex items-center justify-between">
-                            <label htmlFor="direccion" className="text-gray-600 ">{t('Adrress')}*</label>
+                            <label htmlFor="direccion" className="text-gray-600 ">{t('Address')}*</label>
                         </div>
                         <input
                             type="direccion"
@@ -272,17 +177,16 @@ const BuildingsPage = () => {
 
                     </div>
                     <div className="flex items-center">
-                        {showAgregar && (
-                            <button type="button" onClick={handleCreate} className="bg-secondary text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">Agregar nuevo edificio</button>
-                        )}
 
-                        {showGuardarCambios && (
-                            < >
+                        {editMode ? (
+                            <>
                                 <button type="button" onClick={handleReset} className="ml-auto bg-white text-gray-500 hover:text-white hover:bg-gray-500 px-4 py-2 rounded-md shadow-md border border-gray-500">{t('Cancel')}</button>
-                                <button type="button" onClick={handleUpdate} className="ml-auto bg-green-500 text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">{t('Save Change')}</button>
-                            </>
+                                <button type="submit" className="ml-auto bg-green-500 text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">{t('Save Change')}</button>
+                            </>) :
+                            (<button type="submit" className="bg-secondary text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">{isLoading ? 'loading...' : 'Agregar nuevo edificio'}</button>)
+                        }
 
-                        )}
+
 
                     </div>
                 </form>
@@ -329,11 +233,58 @@ const BuildingsPage = () => {
                                 ))}
                             </ul>
                         ) : (
-                            <p>No  hay edificios agragados en base de datos</p>
+                            <p className="p-3">No  hay edificios agragados en base de datos</p>
                         )
                     }
                 </div>
             </div>
+            <ModalComponent stateModal={isShow}>
+                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                        <div className={`mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10`}>
+                            <svg
+                                className={`h-6 w-6 text-red-600`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                                />
+                            </svg>
+                        </div>
+                        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                            <h3 className="text-base font-semibold leading-6 text-gray-900" id="modal-title">
+                                Deactivate account
+                            </h3>
+                            <div className="mt-2">
+                                <p className="text-sm text-gray-500">
+                                    Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button
+                        type="button"
+                        className={`inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto`}
+                    >
+                        Deactivate
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => { setIsShow(false) }}
+                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </ModalComponent>
         </LayoutsAdminPages>
     )
 }

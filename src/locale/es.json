@@ -17,6 +17,9 @@
         "InvalidUser" : "usuario o contraseña incorrecto",
         "Loading" : "cargando",
         "Dashboard" : "panel de control",
+        "Name" : "nombre",
+        "Address" : "dirección",
+        "Phone" : "telefono",
         "UNIQUE constraint failed: users_user.email" : "el email ya se encuentra registrado."
 
 
