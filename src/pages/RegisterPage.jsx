@@ -15,6 +15,8 @@ const RegisterPages = () => {
   const navigate = useNavigate();
   const [msgError, setMsgError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [msgFetch, setMsgFetch] = useState('')
+
   const { VITE_API_URL, VITE_BASE_URL } = import.meta.env
   const { isAuthenticated } = useAuth()
 
@@ -52,20 +54,13 @@ const RegisterPages = () => {
     return errors
   }
 
-  const onSubmit = async ({ username, email, password }) => {
+  const onSubmit = async (values) => {
     setMsgError("");
     setIsLoading(true)
 
-
-    const params = {
-      username,
-      email,
-      password
-    };
-
     try {
-      await register(params);
-      navigate(`${VITE_BASE_URL}`);
+      const { message, user } = await register(values);
+      setMsgFetch(t(message))
     } catch (error) {
       setMsgError(error.message);
       console.error('Login error:', error);
@@ -89,7 +84,16 @@ const RegisterPages = () => {
       <div className="container relative m-auto px-6 text-gray-500 md:px-12 xl:px-40">
         <div className="m-auto space-y-8 md:w-8/12 lg:w-6/12 xl:w-6/12">
           <LogoComponent />
+          {!!msgFetch && (<p className=' flex flex-row text-green-500 text-base text-nowrap leading-5 p-2'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 text-500">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            {msgFetch}
+          </p>)}
+
           <div className="rounded-3xl border border-gray-100 bg-white  shadow-2xl shadow-gray-600/10 backdrop-blur-2xl">
+
+
             <div className="p-8 py-12 sm:p-16">
               <h2 className="mb-8 text-2xl font-bold text-gray-800 ">{t('SingUpTitleForm')}</h2>
               <form onSubmit={formik.handleSubmit} className="space-y-8">
