@@ -2,7 +2,7 @@
 const {VITE_API_URL} = import.meta.env
 
 export const register = async (params) => {
-    const url = `${VITE_API_URL}/users/store/`;
+    const url = `${VITE_API_URL}/api/users/store/`;
     const response = await fetch(url, {
         method: "POST",
         headers: {
