@@ -54,12 +54,18 @@ const BuildingsPage = () => {
                 response = await store(values)
             }
             console.log(response)
+            
         } catch (error) {
             console.log(error.message)
         } finally {
             setIsLoading(false)
-
+             
         }
+            // Actualiza la lista de edificios 
+            const { edificio } = await getAll();
+            setEdificios(edificio);
+            // Resetea el formulario
+            formik.resetForm();
     }
 
     const formik = useFormik({
@@ -91,6 +97,9 @@ const BuildingsPage = () => {
             try {
                 const { message } = await remove(id)
                 console.log(message)
+                 // Actualizar la lista de inmuebles después de eliminar un registro
+                 const { edificio } = await getAll();
+                 setEdificios(edificio);
             } catch (error) {
                 console.log(error.message)
             }

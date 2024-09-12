@@ -6,6 +6,8 @@ const LoginPage = lazy(() => import('../pages/LoginPage.jsx'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage.jsx'));
 const BuildingsPage = lazy(() => import('../pages/BuildingsPage.jsx'));
 const InmueblesPages = lazy(() => import('../pages/InmueblesPages.jsx'));
+const GastosPage = lazy(() => import('../pages/GastosPage.jsx'));
+const HabitantesPage = lazy(() => import('../pages/HabitantesPage.jsx'));
 
 
 // Definición de las rutas
@@ -38,6 +40,18 @@ const ROUTES = [
     key: 'inmuebles',
     path: '/inmuebles',
     component: InmueblesPages,
+    isProtected: true
+  },
+  {
+    key: 'gastos',
+    path: '/gastos',
+    component: GastosPage,
+    isProtected: true
+  },
+  {
+    key: 'habitantes',
+    path: '/habitantes',
+    component: HabitantesPage,
     isProtected: true
   },
 ];

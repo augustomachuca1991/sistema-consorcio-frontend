@@ -3,12 +3,20 @@ import { useAuth } from '../auth/AuthProvider';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink } from 'react-router-dom';
 import LogoComponent from '../components/LogoComponent';
+import { useState } from 'react'; // Importar useState al inicio del archivo
 
 const LayoutsAdminPages = ({ children }) => {
 
     const { signOut, getUser } = useAuth();
     const { VITE_BASE_URL } = import.meta.env
     const { t } = useTranslation();
+    const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para el menú desplegable
+
+
+
+    const desplegarMenu = () => {
+        setIsMenuOpen(!isMenuOpen); // Cambiar el estado cuando se hace clic
+    };
 
 
     const handleSignOut = e => {
@@ -23,7 +31,7 @@ const LayoutsAdminPages = ({ children }) => {
             >
                 <div>
                     <div className="-mx-6 px-6 py-4 flex items-center cursor-pointer">
-                        <LogoComponent/>
+                        <LogoComponent />
                     </div>
 
                     <div className="mt-8 text-center">
@@ -35,6 +43,7 @@ const LayoutsAdminPages = ({ children }) => {
                         <h5 className="mt-4 hidden text-xl font-semibold text-gray-600 lg:block ">{getUser()?.username}</h5>
                         <span className="hidden text-gray-400 lg:block">Admin</span>
                     </div>
+
 
                     <ul className="mt-8 space-y-2 tracking-wide">
                         <li>
@@ -60,6 +69,63 @@ const LayoutsAdminPages = ({ children }) => {
                                 <span className="-mr-1 font-medium">{t('Dashboard')}</span>
                             </a>
                         </li>
+                        
+                        
+                        <li className="relative">
+                            
+                            <button
+                                onClick={desplegarMenu} // Al hacer clic, despliega el menú
+                                className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        className="fill-current text-gray-300 group-hover:text-cyan-300"
+                                        fillRule="evenodd"
+                                        d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z"
+                                        clipRule="evenodd"
+                                    />
+                                    <path
+                                        className="fill-current text-gray-600 group-hover:text-cyan-600 "
+                                        d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z"
+                                    />
+                                </svg>
+                                <span className="group-hover:text-gray-700">Ver</span>
+                            </button>
+
+                            {isMenuOpen && (
+                                <ul className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-20">
+                                    <li>
+                                        <Link to={`${VITE_BASE_URL}inmuebles`} className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
+                                            Inmuebles
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to={`${VITE_BASE_URL}edificios`} className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
+                                            Edificios
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to={`${VITE_BASE_URL}habitantes`} className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
+                                            Habitantes
+                                        </Link>
+                                        
+                                    </li>
+                                    <li>
+                                        <Link to={`${VITE_BASE_URL}gastos`} className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
+                                            Gastos
+                                        </Link>
+                                        
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
+
+                        {/*
                         <li>
                             <Link
                                 to={`${VITE_BASE_URL}edificios`}
@@ -85,8 +151,9 @@ const LayoutsAdminPages = ({ children }) => {
                                 <span className="group-hover:text-gray-700 ">Edificios</span>
                             </Link>
                         </li>
+
                         <li>
-                        <Link
+                            <Link
                                 to={`${VITE_BASE_URL}inmuebles`}
                                 className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600 "
                             >
@@ -110,6 +177,7 @@ const LayoutsAdminPages = ({ children }) => {
                                 <span className="group-hover:text-gray-700 ">Inmuebles</span>
                             </Link>
                         </li>
+*/}
                         <li>
                             <a
                                 href="#"
