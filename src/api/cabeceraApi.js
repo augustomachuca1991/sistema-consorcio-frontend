@@ -1,9 +1,11 @@
 const { VITE_API_URL } = import.meta.env
 
-const mainUrl = `${VITE_API_URL}/api/habitantes/`
+const mainUrl = `${VITE_API_URL}/api/cabecera/`
 
-export const getAll = async () => {
 
+
+
+export const getAllCabecera = async () => {
     const response = await fetch(mainUrl);
 
     if (!response.ok) {
@@ -12,28 +14,11 @@ export const getAll = async () => {
         throw new Error(errorMessage);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data; // Devuelve el objeto completo
 };
 
-// Función para obtener todos los habitantes con la opción de búsqueda por término usando Fetch
-export const getAllHabitantes = async (term = '') => {
-    try {
-        const response = await fetch(`${mainUrl}?search=${term}`);
-        
-        // Comprobar si la respuesta es exitosa
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error al obtener los habitantes:", error);
-        throw error;
-    }
-};
-
-export const store = async (params) => {
+export const storeCab = async (params) => {
     const url = `${mainUrl}store/`;
     const header = {
         method: 'POST',
@@ -53,9 +38,9 @@ export const store = async (params) => {
 
     return response.json();
 };
-
-export const update = async (id_habitante, params) => {
-    const url = `${mainUrl}update/${id_habitante}/`;
+/*
+export const update = async (id_detalle, params) => {
+    const url = `${mainUrl}update/${id_detalle}/`;
     const header = {
         method: 'PUT',
         body: JSON.stringify(params),
@@ -74,9 +59,9 @@ export const update = async (id_habitante, params) => {
 
     return response.json();
 };
-
-export const remove = async (id_habitante) => {
-    const url = `${mainUrl}delete/${id_habitante}/`;
+*/
+export const removeCab = async (id_cabecera) => {
+    const url = `${mainUrl}delete/${id_cabecera}/`;
     const header = {
         method: 'DELETE',
         headers: {

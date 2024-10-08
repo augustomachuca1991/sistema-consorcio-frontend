@@ -98,27 +98,7 @@ function InmueblesPages() {
             console.error('Error al guardar el inmueble:', error);
         }
     };
-    /*const onSubmit = async (values, { resetForm }) => {
-        try {
-            // Guardar el nuevo inmueble en la base de datos
-            await store({
-                id_edificio: values.edificio, // Asegúrate de que `edificio` contenga el ID correcto
-                ubicacion: values.ubicacion,
-                porcentaje: values.porcentaje
-            });
-
-            // Actualiza la lista de inmuebles después de agregar el nuevo
-            const { inmueble } = await getAllInmuebles();
-
-            setInmuebles(inmueble);
-
-            // Resetea el formulario
-            resetForm();
-
-        } catch (error) {
-            console.error('Error al crear el inmueble:', error);
-        }
-    }; */
+   
 
 
     const formik = useFormik({
@@ -157,7 +137,7 @@ function InmueblesPages() {
 
                 <form onSubmit={formik.handleSubmit} className="space-y-8">
                     <div>
-                        <label htmlFor="inmuebles" className="text-gray-600">{t('inmuebles')}</label>
+                        <label htmlFor="inmuebles" className="text-gray-600">{t('edificio')}</label>
                         <select
                             name="edificio"
                             value={formik.values.edificio}
@@ -186,7 +166,7 @@ function InmueblesPages() {
                                 <button type="button" onClick={handleReset} className="ml-auto bg-white text-gray-500 hover:text-white hover:bg-gray-500 px-4 py-2 rounded-md shadow-md border border-gray-500">{t('Cancel')}</button>
                                 <button type="submit" className="ml-auto bg-green-500 text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">{t('Save Change')}</button>
                             </>) :
-                            (<button type="submit" className="bg-secondary text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">{isLoading ? 'loading...' : 'Agregar nuevo edificio'}</button>)
+                            (<button type="submit" className="bg-secondary text-white hover:text-gray-200 px-4 py-2 rounded-md shadow-md">{isLoading ? 'loading...' : 'Agregar nuevo inmueble'}</button>)
                         }
 
 

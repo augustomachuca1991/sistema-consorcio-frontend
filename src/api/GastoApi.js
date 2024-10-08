@@ -4,7 +4,7 @@ const mainUrl = `${VITE_API_URL}/api/gastos/`
 
 
 
-
+// funcion que obtiene los gastos sin filtrar
 export const getAll = async () => {
     const response = await fetch(mainUrl);
 
@@ -16,6 +16,24 @@ export const getAll = async () => {
 
     const data = await response.json();
     return data; // Devuelve el objeto completo
+};
+
+// Función para obtener todos los gastos con la opción de búsqueda por término usando Fetch
+export const getAllGastos = async (term = '') => {
+    try {
+        const response = await fetch(`${mainUrl}?search=${term}`);
+        
+        // Comprobar si la respuesta es exitosa
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error al obtener los gastos:", error);
+        throw error;
+    }
 };
 
 export const store = async (params) => {

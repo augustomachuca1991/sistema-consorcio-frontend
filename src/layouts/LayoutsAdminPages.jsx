@@ -100,6 +100,11 @@ const LayoutsAdminPages = ({ children }) => {
                             {isMenuOpen && (
                                 <ul className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-20">
                                     <li>
+                                        <Link to="/cobranzas" className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
+                                            <strong>Cobranza</strong>
+                                        </Link>
+                                    </li>
+                                    <li>
                                         <Link to={`${VITE_BASE_URL}inmuebles`} className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
                                             Inmuebles
                                         </Link>
